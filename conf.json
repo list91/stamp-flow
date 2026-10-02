@@ -1,0 +1,30 @@
+{
+  "loop": true,
+  "cron_every_min": 15,
+
+  "review": "telegram",
+
+  "search": {
+    "work_format": "REMOTE",
+    "order_by": "relevance"
+  },
+
+  "rotation": {
+    "per_resume": "2-12",
+    "rounds": "2-3"
+  },
+
+  "timeouts_sec": {
+    "apply_delay": "60-180",
+    "resume_delay": "30-90",
+    "round_delay": "120-300"
+  },
+
+  "limits": {
+    "max_per_hour": 20
+  },
+
+  "relevance": {
+    "apply_from": 0.3
+  }
+}

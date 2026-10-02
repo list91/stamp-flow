@@ -1,0 +1,40 @@
+x-common: &common
+  image: stamp_flow:latest
+  restart: unless-stopped
+  volumes:
+    - .:/app:ro
+    - ./config:/app/config:rw
+    # Каталог с SSH-ключом для LLM-драйвера opencode_ssh. Лучше отдельный каталог только
+    # с нужным ключом, а не весь ~/.ssh. В контейнере ключ копируется с правами 600.
+    - ${HH_SSH_DIR:?Укажите HH_SSH_DIR в файле .env}:/keys:ro
+  environment:
+    - CONFIG_DIR=/app/config
+    - PYTHONUNBUFFERED=1
+    # Часовой пояс: в нём считается окно review.work_hours
+    - TZ=${TZ:-UTC}
+    # Имя файла ключа в HH_SSH_DIR (то же имя укажи в llm.key_file как ~/.ssh/<имя>)
+    - HH_SSH_KEY=${HH_SSH_KEY:-id_ed25519}
+
+services:
+  # cron: обходы по расписанию config/crontab (его создаёт run.py по conf.json)
+  cron:
+    <<: *common
+    container_name: stamp_flow_cron
+    hostname: stamp-cron
+    build:
+      context: .
+      args:
+        # uid/gid пользователя app в образе: должны совпадать с владельцем ./config на Linux
+        APP_UID: ${APP_UID:-1000}
+        APP_GID: ${APP_GID:-1000}
+
+  # Telegram-бот: карточки ревью, капча, отправка одобренного
+  bot:
+    <<: *common
+    container_name: stamp_flow_bot
+    hostname: stamp-bot
+    depends_on:
+      - cron
+    user: app
+    init: true
+    command: ["python", "-m", "stamp_flow", "review-bot"]

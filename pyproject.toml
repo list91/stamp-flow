@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stamp-flow"
+version = "0.1.0"
+description = "Review-режим поверх hh-applicant-tool: автоотклики на hh.ru с ревью писем и анкет в Telegram"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "list91" }]
+dependencies = [
+  "requests>=2.32",
+  # Апстрим ставится как есть, на проверенном коммите. Его код в этом репозитории не лежит.
+  "hh-applicant-tool[playwright,pillow] @ git+https://github.com/s3rgeym/hh-applicant-tool@6c51d7908c9fd9a64d839c20762a7c2963dcb662",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+stamp-flow = "stamp_flow.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+stamp_flow = ["review/*.sql"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

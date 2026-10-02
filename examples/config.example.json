@@ -1,0 +1,23 @@
+{
+  "review": {
+    "telegram": {
+      "bot_token": "<токен основного бота от @BotFather>",
+      "chat_id": 0,
+      "proxy_url": null
+    },
+    "work_hours": null,
+    "max_queue": null,
+    "injection_llm": true,
+    "style_file": "style.md",
+    "relevance_profile": ""
+  },
+  "llm": {
+    "driver": "opencode_ssh",
+    "host": "<адрес SSH-хоста с OpenCode>",
+    "user": "<ssh-пользователь>",
+    "key_file": "~/.ssh/<имя ключа без пароля>",
+    "model": "<provider>/<model>",
+    "delete_session": true,
+    "port": 22
+  }
+}
